@@ -1,0 +1,12 @@
+name: CI API test
+on: 
+  pull_request:
+    branches:
+      - main
+jobs:
+  CI-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build environment
+        uses: actions/checkout@v6
+  
