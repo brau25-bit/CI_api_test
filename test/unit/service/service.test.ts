@@ -10,8 +10,16 @@ const task = {
     createdAt: '2026-08-19T04:38:23.501Z'
 }
 
+const secondTask = {
+    id: '87654321',
+    name: 'Testing jest',
+    createdAt: '2026-08-20T04:38:23.501Z'
+}
+
+const tasks = [task, secondTask];
+
 const getTaskById = jest.fn<(id: string) => Promise<Task | null>>();
-const getTasks = jest.fn<() => Promise<Task[]>>();
+const getTasks = jest.fn<() => Promise<Task[] | null>>();
 
 const repository = {
     getTaskById,
@@ -49,4 +57,26 @@ describe("TaskService.getTask", () => {
             service.getTaskById('12345678')
         ).rejects.toThrow("Not found")
     })
+});
+
+describe("TaskService.getTasks", () => {
+    it("Returns list of tasks", async () => {
+        getTasks.mockResolvedValue(tasks);
+
+        const service = new Service(repository);
+
+        const result = await service.getTasks()
+
+        expect(result).toEqual(tasks);
+    });
+
+    it("Returns an empty list", async () => {
+        getTasks.mockResolvedValue(null);
+
+        const service = new Service(repository);
+
+        expect(
+            service.getTasks()
+        ).rejects.toThrow("Not found");
+    });
 })

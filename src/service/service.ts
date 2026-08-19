@@ -10,7 +10,7 @@ export class Service {
 
         const tasks = await this.repository.getTasks();
         
-        if(!tasks) throw new Error("not found");
+        if(!tasks) throw new Error("Not found");
 
         return tasks;
     }
