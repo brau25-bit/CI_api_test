@@ -221,7 +221,7 @@ importers:
         version: 8.23.0
     devDependencies:
       '@jest/globals':
-        specifier: ^30.4.1
+        specifier: 30.4.1
         version: 30.4.1
       '@types/cors':
         specifier: 2.8.19
@@ -239,13 +239,13 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
       jest:
-        specifier: ^30.4.2
+        specifier: 30.4.2
         version: 30.4.2(@types/node@26.2.0)
       node-pg-migrate:
-        specifier: ^9.0.0
+        specifier: 9.0.0
         version: 9.0.0(@types/pg@8.21.0)(pg@8.23.0)
       ts-jest:
-        specifier: ^29.4.12
+        specifier: 29.4.12
         version: 29.4.12(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(jest-util@30.4.1)(jest@30.4.2(@types/node@26.2.0))(typescript@6.0.3)
       typescript:
         specifier: 6.0.3
