@@ -9,9 +9,9 @@ export function router(controller: Controller){
 
     taskRouter.get('/:id', controller.getTaskById.bind(controller));
 
-    taskRouter.patch('/', controller.updateTask.bind(controller));
+    taskRouter.patch('/:id', controller.updateTask.bind(controller));
 
-    taskRouter.delete('', controller.deleteTask.bind(controller));
+    taskRouter.delete('/:id', controller.deleteTask.bind(controller));
 
     taskRouter.post('/', controller.createTask.bind(controller));
 

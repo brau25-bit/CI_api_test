@@ -3,7 +3,7 @@ services:
     image: postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - pg-test:/var/lib/data
     environment:

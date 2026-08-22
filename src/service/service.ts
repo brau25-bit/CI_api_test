@@ -25,15 +25,23 @@ export class Service {
         return task;
     }
 
-    async updateTask(){
+    async updateTask(id: string, name: string): Promise<Task>{
+        if(!id || typeof id !== 'string') throw new Error("Bad request: invalid id");
+
+        if(!name || typeof name !== 'string') throw new Error("Bad request: invalid name");
+
+        const modified_task = await this.repository.updateTask(id, name);
+
+        if(!modified_task) throw new Error("Error ocurred");
+
+        return modified_task;
+    }
+
+    async deleteTask(id: string){
         
     }
 
-    async deleteTask(){
-        
-    }
-
-    async createTask(){
+    async createTask(id: string){
         
     }
 }
