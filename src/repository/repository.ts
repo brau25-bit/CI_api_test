@@ -39,12 +39,28 @@ export class Repository implements TaskRepository{
         return result.rows[0]!
     }
 
-    /*static async UpdateTask(): Promise<Task>{
+    async updateTask(id: string, name: string): Promise<Task>{
+        const query = `
+            UPDATE task
+            SET name = $2
+            WHERE id = $1
+            RETURNING *
+        `;
 
+        const params: unknown[] = [id, name];
+
+        const result = await this.connection.query<Task>(query, params);
+
+        if(result.rowCount === 0) throw new Error("Failed to modify");
+
+        return result.rows[0]!;
     }
 
-    static async DeleteTask(): Promise<Task>{
-
+    /*static async DeleteTask(): Promise<Task>{
+        const query: string = `
+            DELETE * FROM task 
+            WHERE id = $1
+        `;
     }
 
     static async createTask(): Promise<Task>{

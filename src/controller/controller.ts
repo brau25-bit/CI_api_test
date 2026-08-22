@@ -30,7 +30,15 @@ export class Controller {
 
     async updateTask(req: Request, res: Response, next: NextFunction){
         try {
+            const {id} = req.params;
+
+            console.log(req.body);
+
+            const {name} = req.body;
             
+            const result = await this.service.updateTask(id as string, name);
+
+            res.status(200).json(result)
         } catch (error) {
             next(error);
         }
@@ -38,7 +46,7 @@ export class Controller {
 
     async deleteTask(req: Request, res: Response, next: NextFunction){
         try {
-            
+            const {id} = req.params
         } catch (error) {
             next(error);
         }
@@ -46,7 +54,7 @@ export class Controller {
 
     async createTask(req: Request, res: Response, next: NextFunction){
         try {
-            
+            const {id} = req.params
         } catch (error) {
             next(error);
         }

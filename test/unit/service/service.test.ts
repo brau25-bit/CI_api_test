@@ -2,7 +2,6 @@ import {describe, it, expect, jest} from '@jest/globals';
 
 import { Service } from '../../../src/service/service.ts';
 import { Task } from '../../../src/models/task.ts';
-import { exec } from 'node:child_process';
 
 const task = {
     id: '12345678',
@@ -20,10 +19,12 @@ const tasks = [task, secondTask];
 
 const getTaskById = jest.fn<(id: string) => Promise<Task | null>>();
 const getTasks = jest.fn<() => Promise<Task[] | null>>();
+const updateTask = jest.fn<(id: string, name: string) => Promise<Task | null>>();
 
 const repository = {
     getTaskById,
-    getTasks
+    getTasks,
+    updateTask
 }
 
 describe("TaskService.getTask", () => {
@@ -53,6 +54,8 @@ describe("TaskService.getTask", () => {
 
         const service = new Service(repository);
 
+        expect(getTaskById).toHaveBeenCalledWith("12345678")
+
         expect(
             service.getTaskById('12345678')
         ).rejects.toThrow("Not found")
@@ -79,4 +82,50 @@ describe("TaskService.getTasks", () => {
             service.getTasks()
         ).rejects.toThrow("Not found");
     });
+})
+
+
+describe("TaskService.updateTask", () => {
+    it("Modifies especified task", async () => {
+        updateTask.mockResolvedValue(task);
+
+        const service = new Service(repository);
+
+        const result = await service.updateTask("12345678", "Learning jest");
+
+        expect(updateTask).toHaveBeenCalledWith(
+            "12345678",
+            "Learning jest"
+        );
+
+        expect(
+            result
+        ).toEqual(task);
+    });
+
+    it("Throws if not found", () => {
+        updateTask.mockResolvedValue(null)
+
+        const service = new Service(repository);
+
+        expect(
+            service.updateTask("123456", "new task")
+        ).rejects.toThrow("Error ocurred")
+    })
+
+    it("throws if id is invalid", () => {
+        const service = new Service(repository);
+
+        expect(
+            service.updateTask("", "new task")
+        ).rejects.toThrow("Bad request: invalid id");
+    });
+
+    it("Throws if name is invalid", () => {
+        const service = new Service(repository);
+
+        expect(
+            service.updateTask("12345678", "")
+        ).rejects.toThrow("Bad request: invalid name")
+    })
 })

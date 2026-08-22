@@ -12,6 +12,8 @@ const controller = new Controller(service);
 
 const app: Express = express();
 
+app.use(express.json())
+
 app.use(cors());
 
 app.use('/api/test', router(controller));
