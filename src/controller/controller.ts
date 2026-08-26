@@ -47,6 +47,10 @@ export class Controller {
     async deleteTask(req: Request, res: Response, next: NextFunction){
         try {
             const {id} = req.params
+
+            const result = await this.service.deleteTask(id as string);
+
+            res.status(200).json(result)
         } catch (error) {
             next(error);
         }
@@ -54,7 +58,11 @@ export class Controller {
 
     async createTask(req: Request, res: Response, next: NextFunction){
         try {
-            const {id} = req.params
+            const {name} = req.body
+
+            const result = await this.service.createTask(name);
+
+            res.status(201).json(result)
         } catch (error) {
             next(error);
         }
