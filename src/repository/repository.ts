@@ -19,7 +19,7 @@ export class Repository implements TaskRepository{
 
         const result = await this.connection.query<Task>(query, params);
 
-        if(result.rowCount === 0) throw new Error("not found");
+        if(result.rowCount === 0) return null;
 
         return result.rows;
     } 
@@ -34,12 +34,12 @@ export class Repository implements TaskRepository{
 
         const result = await this.connection.query<Task>(query, params);
 
-        if(result.rowCount === 0) throw new Error(`task with id: ${id} not found`)
+        if(result.rowCount === 0) return null;
 
         return result.rows[0]!
     }
 
-    async updateTask(id: string, name: string): Promise<Task>{
+    async updateTask(id: string, name: string): Promise<Task | null>{
         const query = `
             UPDATE task
             SET name = $2
@@ -51,19 +51,40 @@ export class Repository implements TaskRepository{
 
         const result = await this.connection.query<Task>(query, params);
 
-        if(result.rowCount === 0) throw new Error("Failed to modify");
+        if(result.rowCount === 0) return null;
 
         return result.rows[0]!;
     }
 
-    /*static async DeleteTask(): Promise<Task>{
+    async deleteTask(id: string): Promise<Task | null>{
         const query: string = `
             DELETE * FROM task 
             WHERE id = $1
+            RETURNING *
         `;
+
+        const params: unknown[] = [id];
+
+        const result = await this.connection.query<Task>(query, params);
+
+        if(result.rowCount === 0) return null;
+
+        return result.rows[0]!
     }
 
-    static async createTask(): Promise<Task>{
+    async createTask(name: string): Promise<Task | null>{
+        const query: string = `
+            INSERT INTO task(name)
+            VALUES ($1)
+            RETURNING *
+        `;
 
-    }*/
+        const params: unknown[] = [name];
+
+        const result = await this.connection.query<Task>(query, params);
+        
+        if(result.rowCount === 0) return null;
+
+        return result.rows[0]!
+    }
 }

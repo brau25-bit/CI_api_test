@@ -2,6 +2,7 @@ import {describe, it, expect, jest} from '@jest/globals';
 
 import { Service } from '../../../src/service/service.ts';
 import { Task } from '../../../src/models/task.ts';
+import { create } from 'node:domain';
 
 const task = {
     id: '12345678',
@@ -20,11 +21,15 @@ const tasks = [task, secondTask];
 const getTaskById = jest.fn<(id: string) => Promise<Task | null>>();
 const getTasks = jest.fn<() => Promise<Task[] | null>>();
 const updateTask = jest.fn<(id: string, name: string) => Promise<Task | null>>();
+const deleteTask = jest.fn<(id: string) => Promise<Task | null>>();
+const createTask = jest.fn<(name: string) => Promise<Task | null>>();
 
 const repository = {
     getTaskById,
     getTasks,
-    updateTask
+    updateTask,
+    deleteTask,
+    createTask
 }
 
 describe("TaskService.getTask", () => {
@@ -128,4 +133,68 @@ describe("TaskService.updateTask", () => {
             service.updateTask("12345678", "")
         ).rejects.toThrow("Bad request: invalid name")
     })
-})
+});
+
+describe("TaskService.deleteTask", () => {
+    it("Deletes task succesfully", async () => {
+        deleteTask.mockResolvedValue(task);
+
+        const service = new Service(repository);
+
+        const result = await service.deleteTask("12345678")
+
+        expect(result).toEqual(task);
+    });
+    
+    it("Throws if id is invalid", async () => {
+        const service = new Service(repository);
+
+        expect(
+            service.deleteTask("")
+        ).rejects.toThrow("Invalid field: id is required")
+    });
+
+    it("Throws if operation fails", async () => {
+        deleteTask.mockResolvedValue(null);
+
+        const service = new Service(repository);
+
+        expect(
+            service.deleteTask("12345")
+        ).rejects.toThrow("Operation failed to execute");
+    });
+});
+
+describe("TaskService.createTask", () => {
+    it("Creates a task successfully", async () => {
+        createTask.mockResolvedValue(task);
+
+        const service = new Service(repository);
+
+        const result = await service.createTask("Learning jest");
+
+        expect(
+            createTask
+        ).toHaveBeenCalledWith("Learning jest");
+
+        expect(result).toEqual(task);
+    });
+
+    it("Throws if name is invalid", () => {
+        const service = new Service(repository);
+
+        expect(
+            service.createTask("")
+        ).rejects.toThrow("Invalid field: name is required");
+    });
+
+    it("Throws if operation fails", () => {
+        createTask.mockResolvedValue(null);
+
+        const service = new Service(repository);
+
+        expect(
+            service.createTask("fail example")
+        ).rejects.toThrow("Operation failed to execute");
+    })
+});
