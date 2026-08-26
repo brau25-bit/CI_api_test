@@ -37,11 +37,23 @@ export class Service {
         return modified_task;
     }
 
-    async deleteTask(id: string){
-        
+    async deleteTask(id: string): Promise<Task>{
+        if(!id || typeof id !== 'string') throw new Error('Invalid field: id is required');
+
+        const result = await this.repository.deleteTask(id);
+
+        if(!result) throw new Error("Operation failed to execute");
+
+        return result
     }
 
-    async createTask(id: string){
-        
+    async createTask(name: string): Promise<Task>{
+        if(!name || typeof name !== 'string') throw new Error("Invalid field: name is required");
+
+        const result = await this.repository.createTask(name);
+
+        if(!result) throw new Error("Operation failed to execute");
+
+        return result
     }
 }
