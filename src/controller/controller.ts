@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-import { Service } from "../service/service.js";
+import { TaskService } from "../service/task.service.js";
 
 export class Controller {
 
-    constructor(private readonly service: Service){}
+    constructor(private readonly service: TaskService){}
 
     async getTasks(req: Request, res: Response, next: NextFunction){
         try {
@@ -32,11 +32,9 @@ export class Controller {
         try {
             const {id} = req.params;
 
-            console.log(req.body);
-
-            const {name} = req.body;
+            const {name} = req.query;
             
-            const result = await this.service.updateTask(id as string, name);
+            const result = await this.service.updateTask(id as string, name as string);
 
             res.status(200).json(result)
         } catch (error) {
@@ -58,9 +56,9 @@ export class Controller {
 
     async createTask(req: Request, res: Response, next: NextFunction){
         try {
-            const {name} = req.body
+            const {name} = req.query
 
-            const result = await this.service.createTask(name);
+            const result = await this.service.createTask(name as string);
 
             res.status(201).json(result)
         } catch (error) {
