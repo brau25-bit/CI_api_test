@@ -1,8 +1,9 @@
 import { Task } from "../models/task.js";
 import { Repository } from "../repository/repository.js";
 import { TaskRepository } from "../repository/task.repository.js";
+import { TaskService } from "./task.service.js";
 
-export class Service {
+export class Service implements TaskService {
 
     constructor(private readonly repository: TaskRepository){}
     

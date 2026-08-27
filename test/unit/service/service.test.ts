@@ -2,7 +2,6 @@ import {describe, it, expect, jest} from '@jest/globals';
 
 import { Service } from '../../../src/service/service.ts';
 import { Task } from '../../../src/models/task.ts';
-import { create } from 'node:domain';
 
 const task = {
     id: '12345678',
